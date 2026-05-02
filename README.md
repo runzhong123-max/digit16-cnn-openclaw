@@ -1,133 +1,63 @@
-# Digit16 CNN Experiment
+# Digit16 CNN
 
-**16×16 手写数字识别：MLP vs CNN 对比实验**
+一个麻雀虽小五脏俱全的 CNN 实验项目——在 16×16 像素上做手写数字识别，顺带一个能直接用鼠标画数字的交互 demo。
 
-## 项目目标
-
-验证小型 CNN 是否能在 16×16 灰度手写数字图像上完成识别任务，并与 MLP baseline 对比。
-
-## 环境要求
-
-- Python 3.9+
-- CPU 即可运行（可选 CUDA）
-
-## 安装依赖
+## 快速开始
 
 ```bash
-cd digit16-cnn-experiment
+git clone git@github.com:runzhong123-max/digit16-cnn-openclaw.git
+cd digit16-cnn-openclaw
+python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 运行 Smoke Test
-
-验证全流程能跑通（使用极小数据子集，1 个 epoch）：
+## 三个命令
 
 ```bash
-cd digit16-cnn-experiment
+# 1. 跑冒烟测试（1 分钟，验证一切正常）
 python scripts/smoke_test.py
-```
 
-## 运行正式实验
-
-```bash
-cd digit16-cnn-experiment
+# 2. 跑正式实验（2 分钟，训练 MLP 和 CNN，出报告）
 python scripts/run_experiment.py
+
+# 3. 开交互 demo（用鼠标画数字，看模型实时预测）
+python demo/matplotlib_digit_demo.py
 ```
 
-## 运行交互式 Demo
+## 有什么
 
-启动 16×16 手写数字识别 GUI 演示器（使用 matplotlib，无需额外 GUI 框架）：
+| 东西 | 在哪 |
+|------|------|
+| MLP baseline (42k 参数，97.6%) | `src/models.py` |
+| SimpleCNN (18k 参数，98.3%) | `src/models.py` |
+| 训练 + 验证 + 测试 | `scripts/run_experiment.py` |
+| 交互画板 demo | `demo/matplotlib_digit_demo.py` |
+| 实验报告（含曲线和混淆矩阵） | `results/` |
+| 逐行注释的教学版源码 | `tutorial/` |
+
+## 拿来就改
+
+改 `configs/default.yaml` 里的参数，重跑实验：
+
+```yaml
+epochs: 10          # 多练几轮
+learning_rate: 0.0005
+batch_size: 32
+```
+
+改模型？打开 `src/models.py`，加层或改通道数，再跑 `run_experiment.py`。
+
+## 学了什么读完什么
+
+`tutorial/` 里有四个带逐行注释的源码 + 四个独立可跑的演示程序，从「张量怎么流」到「梯度怎么传」到「卷积核长什么样」，一步步拆解。
 
 ```bash
-cd digit16-cnn-experiment
-source venv/bin/activate
-
-# 自动发现最新模型权重
-python demo/matplotlib_digit_demo.py
-
-# 或指定模型路径
-python demo/matplotlib_digit_demo.py --model-path results/experiment_.../simple_cnn/simple_cnn_best.pt
-
-# 调整画笔大小
-python demo/matplotlib_digit_demo.py --brush-size 2
+python tutorial/demo_forward_pass.py   # 跟踪每层张量形状
+python tutorial/demo_backprop.py       # 看参数更新前后变化
+python tutorial/demo_kernels.py        # 卷积核可视化
+python tutorial/demo_data_pipeline.py  # 预处理四步走
 ```
 
-### Demo 操作说明
+## 依赖
 
-| 操作 | 方式 |
-|------|------|
-| 画数字 | **左键拖拽** 在 16×16 网格上 |
-| 擦除 | **右键拖拽** |
-| 预测 | 点击 `[Predict]` 按钮 或按键盘 `p` |
-| 清空 | 点击 `[Clear]` 按钮 或按键盘 `c` |
-| 保存 | 点击 `[Save]` 按钮 或按键盘 `s`，保存为 .npy |
-
-右侧显示:
-- Top-1 预测数字 + 置信度
-- 0-9 每个类别的概率柱状图
-
-### ⚠️ 分布差异注意
-
-用户在 16×16 格子上直接画出的数字与 MNIST 下采样图像在分布上有差异：
-- MNIST 图像是 28×28 扫描原件经 bilinear 下采样到 16×16，像素有平滑过渡
-- 本 demo 的输入只有 0 或 1（二值），且手写轨迹与扫描数字风格不同
-- **因此预测准确率可能低于测试集报告值**，这是数据分布差异导致的正常现象
-
-## 输出结果
-
-每次实验会创建带时间戳的结果目录：
-
-```
-results/
-  experiment_YYYYMMDD_HHMMSS/
-    mlp/
-      mlp_best.pt                 # MLP 最佳模型权重
-      mlp_metrics.csv             # 训练曲线数据
-      mlp_training_curve.png      # 训练曲线图
-      mlp_test_metrics.json       # 测试指标
-      mlp_confusion_matrix.png    # 混淆矩阵
-    simple_cnn/
-      simple_cnn_best.pt
-      simple_cnn_metrics.csv
-      simple_cnn_training_curve.png
-      simple_cnn_test_metrics.json
-      simple_cnn_confusion_matrix.png
-    comparison.csv               # 模型对比表
-    comparison.json              # 模型对比 (JSON)
-    experiment_report.md         # 完整实验报告
-```
-
-## 配置
-
-所有超参数在 `configs/default.yaml` 中统一管理：
-
-- `seed`: 随机种子
-- `batch_size`: 批次大小
-- `epochs`: 训练轮数
-- `learning_rate`: 学习率
-- `image_size`: 输入图像大小
-- `use_subset_for_debug`: 是否使用数据子集
-
-## 项目结构
-
-```
-digit16-cnn-experiment/
-├── README.md
-├── requirements.txt
-├── configs/
-│   └── default.yaml
-├── src/
-│   ├── utils.py          # 工具函数（seed, device, IO）
-│   ├── data.py           # 数据加载（MNIST → 16×16）
-│   ├── models.py         # 模型定义（MLP, SimpleCNN）
-│   ├── train.py          # 训练循环
-│   ├── evaluate.py       # 测试评估
-│   └── infer.py          # 推理接口（供 demo 调用）
-├── demo/
-│   ├── tkinter_digit_demo.py       # Tkinter 版本（需系统 Tcl/Tk）
-│   └── matplotlib_digit_demo.py    # matplotlib 版本（推荐，跨平台）
-├── scripts/
-│   ├── smoke_test.py     # 冒烟测试
-│   └── run_experiment.py # 正式实验
-└── results/              # 实验结果
-```
+Python 3.9+，纯 CPU 运行。`requirements.txt` 就七个包：torch, torchvision, numpy, pandas, scikit-learn, matplotlib, pyyaml。
