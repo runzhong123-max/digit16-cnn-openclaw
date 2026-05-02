@@ -69,7 +69,7 @@ def main():
     print(f"  梯度解读:")
     print(f"    正梯度 → 增大该权重会增大 loss（所以应该减小）")
     print(f"    负梯度 → 增大该权重会减小 loss（所以应该增大）")
-    print(f"    梯度的绝对值大小 = 该权重对 loss 的"影响力"")
+    print(f"    梯度的绝对值大小 = 该权重对 loss 的「影响力」")
 
     # ── 参数更新 ──
     print("\n── 第 5 步：optimizer.step() —— 用梯度更新参数 ──")
