@@ -1,0 +1,11 @@
+# Default hyperparameters for 16x16 digit CNN experiment
+seed: 42
+batch_size: 64
+epochs: 5
+learning_rate: 0.001
+image_size: 16
+model_name: "simple_cnn"  # "mlp" or "simple_cnn"
+output_dir: "results"
+use_subset_for_debug: false
+debug_subset_size: 256
+device: "cpu"  # "cpu" or "cuda" (only use cuda if available)

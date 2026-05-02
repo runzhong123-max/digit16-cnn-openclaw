@@ -1,0 +1,20 @@
+[
+  {
+    "model": "MLP",
+    "parameters": 41802,
+    "best_val_acc": 0.9711666666666666,
+    "test_accuracy": 0.9758,
+    "test_macro_f1": 0.97565,
+    "training_time_s": 16.9,
+    "best_epoch": 5
+  },
+  {
+    "model": "SimpleCNN",
+    "parameters": 18346,
+    "best_val_acc": 0.9805,
+    "test_accuracy": 0.9828,
+    "test_macro_f1": 0.982648,
+    "training_time_s": 31.5,
+    "best_epoch": 5
+  }
+]
