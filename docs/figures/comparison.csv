@@ -1,0 +1,3 @@
+model,parameters,best_val_acc,test_accuracy,test_macro_f1,training_time_s,best_epoch
+MLP,41802,0.9711666666666666,0.9758,0.97565,16.6,5
+SimpleCNN,18346,0.9805,0.9828,0.982648,31.2,5

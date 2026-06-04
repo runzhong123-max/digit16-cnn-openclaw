@@ -11,8 +11,11 @@ venv/
 # Data (MNIST downloads)
 data/
 
-# Results — small files, included for demo portability
-# (model weights are ~72KB each; plots/metrics are tiny)
+# Results (generated per run — keep in your own copy)
+results/
+
+# docs/figures should be tracked for portfolio
+!docs/figures/
 
 # macOS
 .DS_Store
